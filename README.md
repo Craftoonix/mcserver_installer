@@ -94,7 +94,7 @@ apt install git
 
 Downloading the script:
 ```bash
-git clone https://github.com/officialrealTM/mcserver_installer.git
+git clone https://github.com/Craftoonix/mcserver_installer.git
 ```
 
 ## Run the Script
@@ -106,7 +106,7 @@ cd mcserver_installer
 
 Start the Script:
 ```bash
-./mcserver_installer.sh
+./mcserver_installer.sh {my-server-directory}
 ```
 ## FAQ
 
@@ -114,11 +114,6 @@ Start the Script:
 
 No. At least not yet. The Script has been developed and tested on --> [Supported Distros](https://github.com/officialrealTM/mcserver_installer#supported-distros).
 To disable the Distro check see: [Experimental Settings](https://github.com/officialrealTM/mcserver_installer#experimental-settings)
-#### **Where are my Serverfiles located?**
-
-You Minecraft Server files will get stored in `/Servers/Minecraft-<versionnumber>`  
-
-When installing multiple servers of the same type (e.g. two Minecraft 1.8.9 Servers) the second folder will be called `Minecraft-<versionnumber>-1` (or 2 and so on)  
 
 #### **Can I run more than one server at once?**
 
@@ -150,9 +145,9 @@ Feel free to ask me questions on my [Discord](https://realtm.link/discord).
 
 ## Contributing
 
-You are very welcome to contribute to this project!
+You are very welcome to contribute to this project! Please do so in the original project since this fork is only meant for personal use. You may fork this fork if you'd like to make use of it yourself.
 
-To do so, just create a Pull Request and describe your additions as accurate as possible!  
+To contribute on the original project, just create a Pull Request and describe your additions as accurate as possible!  
 Feel free to join my [Discord](https://realtm.link/discord) to ask questions about the code's structure etc.
 
 
