@@ -9,7 +9,10 @@
 ###################################################################
 
 ## START OF COUNTING FUNCTIONS
-path=$(pwd)
+path=/home/jowosh/netowork-share/minecraft-servers
+runfile=run.sh
+serverdir=${1}
+mcdir=$path/$serverdir/
 CONFIG_FILE="$path/.mcserver_installer_config"
 API_BASE_URL="https://api.realtm.de"
 
@@ -192,7 +195,7 @@ function not_supported {
 }
 
 function folder_creator_vanilla {
-cd Servers
+cd $path
 basename="Minecraft-$ver"
 dirname=$basename
 i=1
@@ -201,7 +204,8 @@ do
   dirname=$basename-$i
   ((i++))
 done
-mkdir $dirname
+#mkdir $dirname
+mkdir $serverdir
 
 }
 
@@ -213,9 +217,9 @@ function java_selector {
         check_java16
         version_grab
         check_current16
-        dl=$(python3 mcurlgrabber.py server-url $ver)
+        dl=$(python3 $path/mcserver_installer/mcurlgrabber.py server-url $ver)
         folder_creator_vanilla
-        cd $dirname
+        cd $mcdir
         wget $dl
         sleep 1
         select_ram_16
@@ -225,9 +229,9 @@ function java_selector {
         check_java21
         version_grab
         check_current21
-        dl=$(python3 mcurlgrabber.py server-url $ver)
+        dl=$(python3 $path/mcserver_installer/mcurlgrabber.py server-url $ver)
         folder_creator_vanilla
-        cd $dirname
+        cd $mcdir
         wget $dl
         sleep 1
         select_ram_21
@@ -237,9 +241,9 @@ function java_selector {
         check_java17
         version_grab
         check_current17
-        dl=$(python3 mcurlgrabber.py server-url $ver)
+        dl=$(python3 $path/mcserver_installer/mcurlgrabber.py server-url $ver)
         folder_creator_vanilla
-        cd $dirname
+        cd $mcdir
         wget $dl
         sleep 1
         select_ram_17
@@ -248,9 +252,9 @@ function java_selector {
         check_java8
         version_grab
         check_current8
-        dl=$(python3 mcurlgrabber.py server-url $ver)
+        dl=$(python3 $path/mcserver_installer/mcurlgrabber.py server-url $ver)
         folder_creator_vanilla
-        cd $dirname
+        cd $mcdir
         wget $dl
         sleep 1
         select_ram_8
@@ -259,7 +263,7 @@ function java_selector {
 }
 
 function check_valid {
-    python3 mcurlgrabber.py server-url $ver
+    python3 $path/mcserver_installer/mcurlgrabber.py server-url $ver
     if [[ $? -eq 1 ]]
     then
         dialog --title 'MC-Server Installer by realTM' --msgbox ' \nThe version number entered does not exist or was entered in the wrong format!\nHint: Snapshot versions are not supported! ' 10 60
@@ -611,41 +615,41 @@ function install_java21 {
 }
 
 function script_creator_8 {
-echo '#!/bin/bash' > start.sh
-echo 'function compare {' >> start.sh
-echo '    if [[ $java_version = "21"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=21' >> start.sh
-echo '    elif [[ $java_version = "17."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=17' >> start.sh
-echo '    elif [[ $java_version = "16."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=16' >> start.sh
-echo '    elif [[ $java_version = "1.8"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=8' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function version_grab {' >> start.sh
-echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> start.sh
-echo '    compare' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function check_current8 {' >> start.sh
-echo '' >> start.sh
-echo '    if [[ ! $javaversion -eq 8 ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 8 is required.\nChange it to Java 8 in the following menu'\'' 10 60' >> start.sh
-echo '        sudo update-alternatives --config java' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'version_grab' >> start.sh
-echo 'check_current8' >> start.sh
-echo '' >> start.sh
-echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> start.sh
+echo '#!/bin/bash' > $runfile
+echo 'function compare {' >> $runfile
+echo '    if [[ $java_version = "21"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=21' >> $runfile
+echo '    elif [[ $java_version = "17."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=17' >> $runfile
+echo '    elif [[ $java_version = "16."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=16' >> $runfile
+echo '    elif [[ $java_version = "1.8"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=8' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function version_grab {' >> $runfile
+echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> $runfile
+echo '    compare' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function check_current8 {' >> $runfile
+echo '' >> $runfile
+echo '    if [[ ! $javaversion -eq 8 ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 8 is required.\nChange it to Java 8 in the following menu'\'' 10 60' >> $runfile
+echo '        sudo update-alternatives --config java' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'version_grab' >> $runfile
+echo 'check_current8' >> $runfile
+echo '' >> $runfile
+echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> $runfile
 
 }
 
@@ -682,49 +686,49 @@ clear
         1)
              ram_third=1
              script_creator_8
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         2)
              ram_third=2
              script_creator_8
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         3)
             ram_third=3
             script_creator_8
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         4)
             ram_third=4
             script_creator_8
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         5)
             ram_third=5
             script_creator_8
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         6)
             ram_third=6
             script_creator_8
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         7)
             ram_third=7
             script_creator_8
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         8)
             ram_third=8
             script_creator_8
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         9)
@@ -748,7 +752,7 @@ case $respose in
         ram_second=$(echo "${ram_first//G}")
         ram_third=$(echo "${ram_second// /}")
         script_creator_8
-        chmod +x start.sh
+        chmod +x $runfile
         finalize
         ;;
   1)
@@ -764,41 +768,41 @@ esac
 }
 
 function script_creator_16 {
-echo '#!/bin/bash' > start.sh
-echo 'function compare {' >> start.sh
-echo '    if [[ $java_version = "21"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=21' >> start.sh
-echo '    elif [[ $java_version = "17."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=17' >> start.sh
-echo '    elif [[ $java_version = "16."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=16' >> start.sh
-echo '    elif [[ $java_version = "1.8"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=8' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function version_grab {' >> start.sh
-echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> start.sh
-echo '    compare' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function check_current16 {' >> start.sh
-echo '' >> start.sh
-echo '    if [[ ! $javaversion -eq 16 ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 16 is required.\nChange it to Java 16 in the following menu'\'' 10 60' >> start.sh
-echo '        sudo update-alternatives --config java' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'version_grab' >> start.sh
-echo 'check_current16' >> start.sh
-echo '' >> start.sh
-echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> start.sh
+echo '#!/bin/bash' > $runfile
+echo 'function compare {' >> $runfile
+echo '    if [[ $java_version = "21"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=21' >> $runfile
+echo '    elif [[ $java_version = "17."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=17' >> $runfile
+echo '    elif [[ $java_version = "16."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=16' >> $runfile
+echo '    elif [[ $java_version = "1.8"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=8' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function version_grab {' >> $runfile
+echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> $runfile
+echo '    compare' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function check_current16 {' >> $runfile
+echo '' >> $runfile
+echo '    if [[ ! $javaversion -eq 16 ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 16 is required.\nChange it to Java 16 in the following menu'\'' 10 60' >> $runfile
+echo '        sudo update-alternatives --config java' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'version_grab' >> $runfile
+echo 'check_current16' >> $runfile
+echo '' >> $runfile
+echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> $runfile
 
 }
 
@@ -834,49 +838,49 @@ clear
         1)
              ram_third=1
              script_creator_16
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         2)
              ram_third=2
              script_creator_16
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         3)
             ram_third=3
             script_creator_16
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         4)
             ram_third=4
             script_creator_16
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         5)
             ram_third=5
             script_creator_16
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         6)
             ram_third=6
             script_creator_16
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         7)
             ram_third=7
             script_creator_16
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         8)
             ram_third=8
             script_creator_16
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         9)
@@ -900,7 +904,7 @@ case $respose in
         ram_second=$(echo "${ram_first//G}")
         ram_third=$(echo "${ram_second// /}")
         script_creator_16
-        chmod +x start.sh
+        chmod +x $runfile
         finalize
         ;;
   1)
@@ -916,41 +920,41 @@ esac
 }
 
 function script_creator_17 {
-echo '#!/bin/bash' > start.sh
-echo 'function compare {' > start.sh
-echo '    if [[ $java_version = "21"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=21' >> start.sh
-echo '    elif [[ $java_version = "17."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=17' >> start.sh
-echo '    elif [[ $java_version = "16."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=16' >> start.sh
-echo '    elif [[ $java_version = "1.8"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=8' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function version_grab {' >> start.sh
-echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> start.sh
-echo '    compare' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function check_current17 {' >> start.sh
-echo '' >> start.sh
-echo '    if [[ ! $javaversion -eq 17 ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 17 is required.\nChange it to Java 17 in the following menu'\'' 10 60' >> start.sh
-echo '        sudo update-alternatives --config java' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'version_grab' >> start.sh
-echo 'check_current17' >> start.sh
-echo '' >> start.sh
-echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> start.sh
+echo '#!/bin/bash' > $runfile
+echo 'function compare {' > $runfile
+echo '    if [[ $java_version = "21"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=21' >> $runfile
+echo '    elif [[ $java_version = "17."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=17' >> $runfile
+echo '    elif [[ $java_version = "16."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=16' >> $runfile
+echo '    elif [[ $java_version = "1.8"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=8' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function version_grab {' >> $runfile
+echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> $runfile
+echo '    compare' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function check_current17 {' >> $runfile
+echo '' >> $runfile
+echo '    if [[ ! $javaversion -eq 17 ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 17 is required.\nChange it to Java 17 in the following menu'\'' 10 60' >> $runfile
+echo '        sudo update-alternatives --config java' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'version_grab' >> $runfile
+echo 'check_current17' >> $runfile
+echo '' >> $runfile
+echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> $runfile
 
 }
 
@@ -987,49 +991,49 @@ clear
         1)
              ram_third=1
              script_creator_17
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         2)
              ram_third=2
              script_creator_17
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         3)
             ram_third=3
             script_creator_17
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         4)
             ram_third=4
             script_creator_17
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         5)
             ram_third=5
             script_creator_17
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         6)
             ram_third=6
             script_creator_17
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         7)
             ram_third=7
             script_creator_17
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         8)
             ram_third=8
             script_creator_17
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         9)
@@ -1053,7 +1057,7 @@ case $respose in
         ram_second=$(echo "${ram_first//G}")
         ram_third=$(echo "${ram_second// /}")
         script_creator_17
-        chmod +x start.sh
+        chmod +x $runfile
         finalize
         ;;
   1)
@@ -1067,41 +1071,41 @@ esac
 }
 
 function script_creator_21 {
-echo '#!/bin/bash' > start.sh
-echo 'function compare {' >> start.sh
-echo '    if [[ $java_version = "21"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=21' >> start.sh
-echo '    elif [[ $java_version = "17."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=17' >> start.sh
-echo '    elif [[ $java_version = "16."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=16' >> start.sh
-echo '    elif [[ $java_version = "1.8"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=8' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function version_grab {' >> start.sh
-echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> start.sh
-echo '    compare' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function check_current21 {' >> start.sh
-echo '' >> start.sh
-echo '    if [[ ! $javaversion -eq 21 ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 21 is required.\nChange it to Java 21 in the following menu'\'' 10 60' >> start.sh
-echo '        sudo update-alternatives --config java' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'version_grab' >> start.sh
-echo 'check_current21' >> start.sh
-echo '' >> start.sh
-echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> start.sh
+echo '#!/bin/bash' > $runfile
+echo 'function compare {' >> $runfile
+echo '    if [[ $java_version = "21"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=21' >> $runfile
+echo '    elif [[ $java_version = "17."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=17' >> $runfile
+echo '    elif [[ $java_version = "16."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=16' >> $runfile
+echo '    elif [[ $java_version = "1.8"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=8' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function version_grab {' >> $runfile
+echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> $runfile
+echo '    compare' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function check_current21 {' >> $runfile
+echo '' >> $runfile
+echo '    if [[ ! $javaversion -eq 21 ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 21 is required.\nChange it to Java 21 in the following menu'\'' 10 60' >> $runfile
+echo '        sudo update-alternatives --config java' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'version_grab' >> $runfile
+echo 'check_current21' >> $runfile
+echo '' >> $runfile
+echo "screen -S Minecraft java -Xmx$ram_third"G" -Xms512M -jar server.jar" >> $runfile
 
 }
 
@@ -1138,49 +1142,49 @@ clear
         1)
              ram_third=1
              script_creator_21
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         2)
              ram_third=2
              script_creator_21
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         3)
             ram_third=3
             script_creator_21
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         4)
             ram_third=4
             script_creator_21
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         5)
             ram_third=5
             script_creator_21
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         6)
             ram_third=6
             script_creator_21
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         7)
             ram_third=7
             script_creator_21
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         8)
             ram_third=8
             script_creator_21
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         9)
@@ -1203,7 +1207,7 @@ case $respose in
         ram_second=$(echo "${ram_first//G}")
         ram_third=$(echo "${ram_second// /}")
         script_creator_21
-        chmod +x start.sh
+        chmod +x $runfile
         finalize
         ;;
   1)
@@ -1220,7 +1224,7 @@ esac
 function finalize {
     increment_counter
     echo "eula=true" > eula.txt
-    dialog --msgbox "Your server has been installed to\nServers --> $dirname\n\nTo start it go to the folder with this command:\ncd Servers/$dirname \n\nand execute\n./start.sh" 15 60 
+    dialog --msgbox "Your server has been installed to\nServers --> $dirname\n\nTo start it go to the folder with this command:\ncd Servers/$dirname \n\nand execute\n./$runfile" 15 60
     clear
 }
 
@@ -2056,7 +2060,7 @@ esac
 }
 
 function folder_creator_forge {
-cd Servers
+cd $path
 basename="Forge-$ver"
 dirname=$basename
 i=1
@@ -2065,7 +2069,8 @@ do
   dirname=$basename-$i
   ((i++))
 done
-mkdir $dirname
+#mkdir $dirname
+mkdir $serverdir
 
 }
 
@@ -2140,49 +2145,49 @@ clear
         1)
              ram_third=1
              decide_script_version
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         2)
              ram_third=2
              decide_script_version
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         3)
             ram_third=3
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         4)
             ram_third=4
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         5)
             ram_third=5
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         6)
             ram_third=6
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         7)
             ram_third=7
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         8)
             ram_third=8
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         9)
@@ -2225,49 +2230,49 @@ clear
         1)
              ram_third=1
              decide_script_version
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         2)
              ram_third=2
              decide_script_version
-             chmod +x start.sh
+             chmod +x $runfile
              finalize
              ;;
         3)
             ram_third=3
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         4)
             ram_third=4
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         5)
             ram_third=5
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
              ;;
         6)
             ram_third=6
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         7)
             ram_third=7
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         8)
             ram_third=8
             decide_script_version
-            chmod +x start.sh
+            chmod +x $runfile
             finalize
             ;;
         9)
@@ -2323,42 +2328,42 @@ function forge_script_creator_17 {
 	rm run.bat
 	rm run.sh
 	touch user_jvm_args.txt
-echo '#!/bin/bash' > start.sh
-echo 'function compare {' >> start.sh
-echo '    if [[ $java_version = "21"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=21' >> start.sh
-echo '    elif [[ $java_version = "17."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=17' >> start.sh
-echo '    elif [[ $java_version = "16."* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=16' >> start.sh
-echo '    elif [[ $java_version = "1.8"* ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        javaversion=8' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function version_grab {' >> start.sh
-echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> start.sh
-echo '    compare' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'function check_current17 {' >> start.sh
-echo '' >> start.sh
-echo '    if [[ ! $javaversion -eq 17 ]]' >> start.sh
-echo '    then' >> start.sh
-echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 17 is required.\nChange it to Java 17 in the following menu'\'' 10 60' >> start.sh
-echo '        sudo update-alternatives --config java' >> start.sh
-echo '    fi' >> start.sh
-echo '}' >> start.sh
-echo '' >> start.sh
-echo 'version_grab' >> start.sh
-echo 'check_current17' >> start.sh
-echo '' >> start.sh
-echo "screen -S Minecraft java @user_jvm_args.txt @libraries/net/minecraftforge/forge/$ver-$forge_ex_version_number/unix_args.txt \"\$@"\" >> start.sh
-	chmod +x start.sh
+echo '#!/bin/bash' > $runfile
+echo 'function compare {' >> $runfile
+echo '    if [[ $java_version = "21"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=21' >> $runfile
+echo '    elif [[ $java_version = "17."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=17' >> $runfile
+echo '    elif [[ $java_version = "16."* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=16' >> $runfile
+echo '    elif [[ $java_version = "1.8"* ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        javaversion=8' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function version_grab {' >> $runfile
+echo '    java_version=$(java -version 2>&1 | awk -F[\"_] '\''NR==1{print $2}'\'')' >> $runfile
+echo '    compare' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'function check_current17 {' >> $runfile
+echo '' >> $runfile
+echo '    if [[ ! $javaversion -eq 17 ]]' >> $runfile
+echo '    then' >> $runfile
+echo '        dialog --title '\''MC-Server Installer by realTM'\'' --msgbox '\''You currently have Java '\''$javaversion'\'' selected, but Java 17 is required.\nChange it to Java 17 in the following menu'\'' 10 60' >> $runfile
+echo '        sudo update-alternatives --config java' >> $runfile
+echo '    fi' >> $runfile
+echo '}' >> $runfile
+echo '' >> $runfile
+echo 'version_grab' >> $runfile
+echo 'check_current17' >> $runfile
+echo '' >> $runfile
+echo "screen -S Minecraft java @user_jvm_args.txt @libraries/net/minecraftforge/forge/$ver-$forge_ex_version_number/unix_args.txt \"\$@"\" >> $runfile
+	chmod +x $runfile
 	echo "" >> user_jvm_args.txt
 	echo "-Xmx$ram_third"G"" >> user_jvm_args.txt
 }
@@ -2395,7 +2400,7 @@ function forge_new_version_check {
         version_grab
         check_current21
         folder_creator_forge
-        cd $dirname
+        cd $mcdir
         wget https://maven.minecraftforge.net/net/minecraftforge/forge/$ver-$forge_ex_version_number/forge-$ver-$forge_ex_version_number-installer.jar
         forge_new_installer_routine
     elif [[ $ver = "1.17"* ]] || [[ $ver = "1.18"* ]] || [[ $ver = "1.19"* ]] || [[ $ver = "1.20"* ]] 
@@ -2405,7 +2410,7 @@ function forge_new_version_check {
         version_grab
         check_current17
         folder_creator_forge
-        cd $dirname
+        cd $mcdir
         wget https://maven.minecraftforge.net/net/minecraftforge/forge/$ver-$forge_ex_version_number/forge-$ver-$forge_ex_version_number-installer.jar
         forge_new_installer_routine
     else
@@ -2418,7 +2423,7 @@ function forge_new_version_check {
 function normal_forge {
         clear
         folder_creator_forge
-        cd $dirname
+        cd $mcdir
         if [[ $forge_ex_version_number = "11.15.1.1890" ]] || [[ $forge_ex_version_number = "11.15.1.1902" ]] || [[ $forge_ex_version_number = "11.15.1.2318" ]]
         then
             wget https://maven.minecraftforge.net/net/minecraftforge/forge/$ver-$forge_ex_version_number-$ver/forge-$ver-$forge_ex_version_number-$ver-installer.jar
@@ -3314,7 +3319,7 @@ compiled_folder () {
 }
 
 function folder_creator_spigot {
-cd Servers
+cd $path
 basename="Spigot-$ver"
 dirname=$basename
 i=1
@@ -3323,13 +3328,14 @@ do
   dirname=$basename-$i
   ((i++))
 done
-mkdir $dirname
+#mkdir $dirname
+mkdir $serverdir
 
 }
 
 download_buildtools () {
 
-    cd $dirname
+    cd $serverdir
     mkdir BuildTools
     cd BuildTools
     wget https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
@@ -3343,11 +3349,11 @@ install_spigot () {
     java -jar BuildTools.jar --rev $ver
     if [[ $disable = true ]]
     then
-        cd $path/Servers/$dirname
+        cd $mcdir
         rm -R BuildTools
     else
         mv spigot-$ver.jar $path/.compiled
-        cd $path/Servers/$dirname
+        cd $mcdir
         rm -R BuildTools
     fi
 }
@@ -3374,11 +3380,11 @@ move_files () {
 
     if [[ $disable = true ]]
     then
-        cd $path/Servers/$dirname
+        cd $mcdir
         mv spigot-$ver.jar server.jar
     else
-        cp $path/.compiled/spigot-$ver.jar $path/Servers/$dirname
-        cd $path/Servers/$dirname
+        cp $path/.compiled/spigot-$ver.jar $mcdir
+        cd $mcdir
         mv spigot-$ver.jar server.jar
     fi
 }
@@ -4186,7 +4192,7 @@ check_existing () {
 }
 
 function folder_creator_paper {
-cd Servers
+cd $path
 basename="Paper-"$version"_Build-$build"
 dirname=$basename
 i=1
@@ -4195,13 +4201,14 @@ do
   dirname=$basename-"($i)"
   ((i++))
 done
-mkdir $dirname
+#mkdir $dirname
+mkdir $serverdir
 
 }
 
 download_jar () {
     
-    cd $path/Servers/$dirname
+    cd $mcdir
     wget https://api.papermc.io/v2/projects/paper/versions/$version/builds/$build/downloads/paper-$version-$build.jar
     mv paper*.jar server.jar
     paper_ram_selector
@@ -4421,7 +4428,7 @@ function leaf_direct_download_routine {
     version_grab
     check_current17
     folder_creator_leaf_direct
-    cd $path/Servers/$dirname
+    cd $mcdir
     wget https://github.com/Winds-Studio/Leaf/releases/download/ver-$version/leaf-$version.jar
     mv leaf*.jar server.jar
     leaf_ram_selector
@@ -4541,7 +4548,7 @@ show_leaf_builds () {
 }
 
 function folder_creator_leaf_direct {
-cd Servers
+cd $serverdir
 basename="Leaf-"$version
 dirname=$basename
 i=1
@@ -4550,12 +4557,13 @@ do
   dirname=$basename-"($i)"
   ((i++))
 done
-mkdir $dirname
+#mkdir $dirname
+mkdir $serverdir
 
 }
 
 function folder_creator_leaf_api {
-cd Servers
+cd $path
 basename="Leaf-"$version"_Build-$build"
 dirname=$basename
 i=1
@@ -4564,13 +4572,14 @@ do
   dirname=$basename-"($i)"
   ((i++))
 done
-mkdir $dirname
+#mkdir $dirname
+mkdir $serverdir
 
 }
 
 download_leaf_jar () {
     
-    cd $path/Servers/$dirname
+    cd $mcdir
     wget https://api.leafmc.one/v2/projects/leaf/versions/$version/builds/$build/downloads/leaf-$version-$build.jar
     mv leaf*.jar server.jar
     leaf_ram_selector
@@ -4763,7 +4772,7 @@ function servers_folder {
     if [[ ! -d Servers ]]
     then
         cd $path
-        mkdir Servers
+        #mkdir Servers
     fi
 }
 
