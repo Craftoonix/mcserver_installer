@@ -4801,4 +4801,6 @@ else
     choose_type
 fi
 
+sudo chown jowosh $mcdir
+
 ## End of Startup function
